@@ -8,7 +8,6 @@ class CheckoutController extends Controller
 {
     public function index(){
 
-
         if(!auth()->check()){
             return redirect()->route('login');
         } 
@@ -63,12 +62,12 @@ class CheckoutController extends Controller
 
         $creditCard->setSender()->setPhone()->withParameters(
             11,
-            25550888149
+            56273440
         );
 
         $creditCard->setSender()->setDocument()->withParameters(
             'CPF',
-            'insira um numero de CPF valido'
+            '25550888149'
         );
 
         $creditCard->setSender()->setHash($dataPost['hash']);
@@ -99,7 +98,8 @@ class CheckoutController extends Controller
 
         $creditCard->setToken($dataPost['card_token']);
 
-        list($quatity, $installmentAmount) = explode('|', $dataPost['installment']);
+        list($quantity, $installmentAmount) = explode('|', $dataPost['installment']);
+        $installmentAmount = number_format($installmentAmount, 2,'.','');
         
 
         $creditCard->setInstallment()->withParameters($quantity, $installmentAmount);
@@ -124,6 +124,22 @@ class CheckoutController extends Controller
         );
 
         var_dump($result);
+        $userOrder = [
+            'reference' => $reference,
+            'pagseguro_code' => $result->getCode,
+            'pagseguro_status' => $result->getStatus,
+            'items' => serialize($cartItens),
+            'store_id' => 5
+        ];
+
+        $user->order()->create($userOrder);
+
+        return response()->json([
+            'data' => [
+                'status' => true,
+                'message' => 'Pedido criado com sucesso'
+            ]
+        ]);
 
 
 
