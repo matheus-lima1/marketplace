@@ -28,5 +28,23 @@
 
          @endforeach
     </div>
+
+    <div class="row">
+        <div class="col-12">
+            <h2>Lojas Destaque</h2>
+            <hr>
+        </div>
+        @foreach($stores as $store)
+        <div class="col-4">
+            @if($store->logo)
+                <img src="{{'storage/'.$store->logo}}" alt="Logo da Loja: {{$store->name}} " class="img-fluid">
+            @else
+                <img src="https://via.placeholder.com/600X300.png?text=logo" alt="Loja sem logo..." class="img-fluid">
+            @endif
+            <h3>{{$store->name}}</h3>
+            <p>{{$store->description}}</p>
+        </div>
+        @endforeach
+    </div>
     
 @endsection

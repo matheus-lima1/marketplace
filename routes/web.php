@@ -3,6 +3,7 @@
 
 Route::get('/','HomeController@index')->name('home');
 Route::get('/product/{slug}','HomeController@single')->name('product.single');
+Route::get('/category/{slug}','Category@Controller@index')->name('category.single');
 
 Route::prefix('cart')->name('cart.')->group(function(){
     Route::post('add','CartController@add')->name('add');
@@ -66,6 +67,7 @@ Route::get('/model', function(){
 Route::prefix('checkout')->name('checkout.')->group(function(){
     Route::get('/','CheckoutController@index')->name('index');
     Route::post('proccess','CheckoutController@proccess')->name('proccess');
+    Route::get('thanks', 'CheckoutController@thanks')->name('thanks');
 });
 
 

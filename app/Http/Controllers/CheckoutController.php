@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Payment\PagSeguro\CreditCard;
 
 class CheckoutController extends Controller
 {
@@ -14,6 +15,10 @@ class CheckoutController extends Controller
         if(!auth()->check()){
             return redirect()->route('login');
         } 
+
+        if(!session()->has('cart')){
+            return redirect()->route('home');
+        }
 
         $this->makePagSeguroSession();
 
@@ -31,100 +36,15 @@ class CheckoutController extends Controller
     }
 
     public function proccess(Request $request){
-
-        $reference = 'XPTO';
-        $dataPost = $request->all();
-
-
-        $creditCard = new \PagSeguro\Domains\Requests\DirectPayment\CreditCard();
-
-        $creditCard->setReceiverEmail(env('PAGSEGURO_EMAIL'));
-
-        $creditCard->setReference($reference);
-
-        $creditCard->setCurrency("BRL");
-
-        $cartItens = session()->get('cart');
-
-        foreach($cartItens as $item){
-        $creditCard->addItems()->withParameters(
-            $reference,
-            $item['name'],
-            $item['amount'],
-            $item['price']
-        );
-    }
-
-
-
-        $user = auth()->user();
-        $email = env('PAGSEGURO_ENV') == 'sandbox' ? 'test@sandbox.pagseguro.com.br' : $user->email;
-
-        $creditCard->setSender()->setName($user->name);
-        $creditCard->setSender()->setEmail($email);
-
-        $creditCard->setSender()->setPhone()->withParameters(
-            11,
-            56273440
-        );
-
-        $creditCard->setSender()->setDocument()->withParameters(
-            'CPF',
-            '25550888149'
-        );
-
-        $creditCard->setSender()->setHash($dataPost['hash']);
-
-        $creditCard->setSender()->setIp('127.0.0.0');
-
-        $creditCard->setShipping()->setAddress()->withParameters(
-            'Av. Brig. Faria Lima',
-            '1384',
-            'Jardim Paulistano',
-            '01452002',
-            'São Paulo',
-            'SP',
-            'BRA',
-            'apto. 114'
-        );
-
-        $creditCard->setBilling()->setAddress()->withParameters(
-            'Av. Brig. Faria Lima',
-            '1384',
-            'Jardim Paulistano',
-            '01452002',
-            'São Paulo',
-            'SP',
-            'BRA',
-            'apto. 114'
-        );
-
-        $creditCard->setToken($dataPost['card_token']);
-
-        list($quantity, $installmentAmount) = explode('|', $dataPost['installment']);
-        $installmentAmount = number_format($installmentAmount, 2,'.','');
         
+        try {
+            $cartItens = session()->get('cart');
+        $user = auth()->user();
+        $dataPost = $request->all();
+        $reference = 'XPTO';
 
-        $creditCard->setInstallment()->withParameters($quantity, $installmentAmount);
-
-        $creditCard->setHolder()->setBirthdate('01/10/1979');
-        $creditCard->setHolder()->setName($dataPost['card_name']); // Equals in Credit Card
-
-        $creditCard->setHolder()->setPhone()->withParameters(
-            11,
-            56273440
-        );
-
-        $creditCard->setHolder()->setDocument()->withParameters(
-            'CPF',
-            '25550888149'
-        );
-
-        $creditCard->setMode('DEFAULT');
-
-        $result = $creditCard->register(
-            \PagSeguro\Configuration\Configure::getAccountCredentials()
-        );
+        $creditCardPayment = new CreditCard($cartItens, $user, $dataPost, $reference);
+        $result = $creditCardPayment->doPayment();
 
         $userOrder = [
             'reference' => $reference,
@@ -136,15 +56,34 @@ class CheckoutController extends Controller
 
         $user->orders()->create($userOrder);
 
+        session()->forget('cart');
+        session()->forget('pagseguro_session_code');
+
         return response()->json([
             'data' => [
                 'status' => true,
-                'message' => 'Pedido criado com sucesso'
+                'message' => 'Pedido criado com sucesso',
+                'order' => $reference
             ]
         ]);
 
+        } catch (\Exception $e) {
+
+            $message = env('APP_DEBUG') ? $e->getMessage() : 'Erro ao processar pedido.';
+
+            return response()->json([
+            'data' => [
+                'status' => false,
+                'message' => $message
+            ] 
+            ], 401);
+        }
 
 
+    }
+
+    public function thanks(){
+        return view('thanks');
     }
 
     private function makePagSeguroSession(){
