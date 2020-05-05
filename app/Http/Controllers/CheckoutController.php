@@ -8,6 +8,9 @@ class CheckoutController extends Controller
 {
     public function index(){
 
+        //var_dump(session()->get('pagseguro_session_code'));
+        //session()->forget('pagseguro_session_code');
+
         if(!auth()->check()){
             return redirect()->route('login');
         } 
@@ -123,16 +126,15 @@ class CheckoutController extends Controller
             \PagSeguro\Configuration\Configure::getAccountCredentials()
         );
 
-        var_dump($result);
         $userOrder = [
             'reference' => $reference,
-            'pagseguro_code' => $result->getCode,
-            'pagseguro_status' => $result->getStatus,
+            'pagseguro_code' => $result->getCode(),
+            'pagseguro_status' => $result->getStatus(),
             'items' => serialize($cartItens),
             'store_id' => 5
         ];
 
-        $user->order()->create($userOrder);
+        $user->orders()->create($userOrder);
 
         return response()->json([
             'data' => [
