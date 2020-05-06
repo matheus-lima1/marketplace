@@ -38,9 +38,10 @@ class CheckoutController extends Controller
     public function proccess(Request $request){
         
         try {
-            $cartItens = session()->get('cart');
+        $cartItens = session()->get('cart');
         $user = auth()->user();
         $dataPost = $request->all();
+        $stores = array_unique(array_column($cartItens,'store_id'));
         $reference = 'XPTO';
 
         $creditCardPayment = new CreditCard($cartItens, $user, $dataPost, $reference);
@@ -54,7 +55,8 @@ class CheckoutController extends Controller
             'store_id' => 5
         ];
 
-        $user->orders()->create($userOrder);
+        $userOrder = $user->orders()->create($userOrder);
+        $userOrder->stores()->sync($stores);
 
         session()->forget('cart');
         session()->forget('pagseguro_session_code');

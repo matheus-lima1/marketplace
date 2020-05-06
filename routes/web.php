@@ -3,7 +3,8 @@
 
 Route::get('/','HomeController@index')->name('home');
 Route::get('/product/{slug}','HomeController@single')->name('product.single');
-Route::get('/category/{slug}','Category@Controller@index')->name('category.single');
+Route::get('/category/{slug}','CategoryController@index')->name('category.single');
+Route::get('/store/{slug}','StoreController@index')->name('store.single');
 
 Route::prefix('cart')->name('cart.')->group(function(){
     Route::post('add','CartController@add')->name('add');
@@ -91,6 +92,8 @@ Route::group(['middleware' => ['auth']],function(){
         Route::resource('categories','CategoryController');
 
         Route::post('photos/remove/','ProductPhotoController@removePhoto')->name('photo.remove');
+        Route::get('orders/my','OrdersController@index');
+        
     });
     
 });
