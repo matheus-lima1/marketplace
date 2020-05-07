@@ -74,6 +74,8 @@ Route::prefix('checkout')->name('checkout.')->group(function(){
 
 Route::group(['middleware' => ['auth']],function(){
 
+    Route::get('my-orders', 'UserOrderController@index')->name('user.orders');
+
     Route::prefix('admin')->name('admin.')->namespace('Admin')->group(function(){
 
         /*
@@ -92,7 +94,7 @@ Route::group(['middleware' => ['auth']],function(){
         Route::resource('categories','CategoryController');
 
         Route::post('photos/remove/','ProductPhotoController@removePhoto')->name('photo.remove');
-        Route::get('orders/my','OrdersController@index');
+        Route::get('orders/my','OrdersController@index')->name('orders.my');
         
     });
     

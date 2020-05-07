@@ -7,8 +7,8 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Marketplace L6</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="{{asset('css/app.css')}}">
+
     <style>
         .front.row {
             margin-bottom: 40px;
@@ -27,9 +27,11 @@
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
 
         <ul class="navbar-nav mr-auto">
+            <!--
             <li class="nav-item @if(request()->is('/')) active @endif">
                 <a class="nav-link" href="{{route('home')}}">Home <span class="sr-only">(current)</span></a>
             </li>
+            -->
 
             @foreach($categories as $category)
                 <li class="nav-item">
@@ -55,21 +57,30 @@
             @if (Route::has('login'))
                 <div class="top-right links">
                     @auth
-                        <a href="{{ url('/home') }}">Home</a>
+                       <!--- <a href="{{ url('/home') }}" class="btn btn-secondary btn-lg active" role="button" aria-pressed="true">Home</a> -->
                     @else
-                        <a href="{{ route('login') }}">Login</a>
+                        <a href="{{ route('login') }}" class="btn btn-secondary btn-sm active" role="button" aria-pressed="true">Login</a>
     
                         @if (Route::has('register'))
-                            <a href="{{ route('register') }}">Register</a>
+                            <a href="{{ route('register') }}" class="btn btn-secondary btn-sm active" role="button" aria-pressed="true">Register</a>
                         @endif
                     @endauth
                 </div>
             @endif
         </div>
-        @endauth
+    @endauth
         <div class="my-2 my-lg-0">
                     
             <ul class="navbar-nav mr-auto">
+
+                @auth
+                <li class="nav-item @if(request()->is('my-orders')) active @endif">
+                    <a href="{{route('user.orders')}}" class="btn btn-secondary btn-lg active" role="button" aria-pressed="true">
+                    Meus Pedidos
+                    </a>
+                </li>
+                @endauth
+
                 <li class="nav-item">
                     <a href="{{route('cart.index')}}" class="nav-link">
                         @if(session()->has('cart'))
@@ -89,6 +100,15 @@
     @include('flash::message')
     @yield('content')
 </div>
+
+<script
+src="https://code.jquery.com/jquery-2.2.4.min.js"
+integrity="sha256-BbhdlvQf/xTY9gja0Dq3HiwQF8LaCRTXxZKRutelT44="
+crossorigin="anonymous"></script>
+
+<script src="{{asset('js/app.js')}}"></script>
+
+
 @yield('scripts')
 </body>
 </html>

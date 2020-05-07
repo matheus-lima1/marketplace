@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>MarketPlace</title>
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" class="css">
+    <link rel="stylesheet" href="{{asset('css/app.css')}}">
 </head>
 <body>
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark"  style="margin-bottom: 40px;">
@@ -17,6 +17,9 @@
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
           @auth  
           <ul class="navbar-nav mr-auto">
+            <li class="nav-item @if(request()->is('admin/orders*')) active @endif">
+              <a class="btn btn-secondary btn-lg active" role="button" aria-pressed="true" href="{{route('admin.orders.my')}}">Pedidos da Loja </a>
+            </li>
             <li class="nav-item @if(request()->is('admin/stores*')) active @endif">
                 <a class="nav-link" href="{{route('admin.stores.index')}}">Lojas <span class="sr-only">(current)</span></a>
             </li>
@@ -49,5 +52,12 @@
         @include('flash::message')
         @yield('content') <!-- chamar con teudo da section das heranças -->
     </div>
+
+    <script
+    src="https://code.jquery.com/jquery-2.2.4.min.js"
+    integrity="sha256-BbhdlvQf/xTY9gja0Dq3HiwQF8LaCRTXxZKRutelT44="
+    crossorigin="anonymous"></script>
+
+    <script src="{{asset('js/app.js')}}"></script>
 </body>
 </html>
