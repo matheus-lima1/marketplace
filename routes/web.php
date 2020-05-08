@@ -103,3 +103,18 @@ Route::group(['middleware' => ['auth']],function(){
 Auth::routes();
 
 Route::get('/home', 'HomeController@index')->name('home');
+
+Route::get('not', function()
+{
+    $user = \App\User::find(4);
+
+    //$user->notify(new App\Notifications\StoreReceiveNewOrder());
+    $stores = [1,2,3,4];
+    $stores = \App\Store::whereIn('id',$stores)->get();
+
+    return $stores->map(function($store){
+        return $store->user;
+    });
+
+    return $user->readNotifications;
+});
