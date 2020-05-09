@@ -17,6 +17,9 @@ class HomeController extends Controller
 
     public function index()
     {
+        var_dump(session()->get('pagseguro_session_code'));
+        //session()->forget('pagseguro_session_code');
+
         $products = $this->product->limit(6)->get();
 
         $stores = \App\Store::limit(3)->get();
