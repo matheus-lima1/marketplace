@@ -52,8 +52,8 @@ class CheckoutController extends Controller
             'reference' => $reference,
             'pagseguro_code' => $result->getCode(),
             'pagseguro_status' => $result->getStatus(),
-            'items' => serialize($cartItens),
-            'store_id' => 5
+            'items' => serialize($cartItens)
+            
         ];
 
         $userOrder = $user->orders()->create($userOrder);

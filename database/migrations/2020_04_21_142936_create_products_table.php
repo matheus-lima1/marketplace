@@ -28,7 +28,8 @@ class CreateProductsTable extends Migration
             $table->timestamps();
 
             // store_id se relaciona com o atributo 'id' da tabela 'store'
-            $table->foreign('store_id')->references('id')->on('stores'); // products_store_id_foreign
+            $table->foreign('store_id')->references('id')->on('stores')->onDelete('cascade'); 
+            // products_store_id_foreign
         });
     }
 

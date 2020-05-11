@@ -79,6 +79,14 @@
                     Meus Pedidos
                     </a>
                 </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#" onclick="event.preventDefault(); 
+                                                          document.querySelector('form.logout').submit()">Sair</a>
+
+                    <form action="{{route('logout')}}" method="POST" class="logout" style="display: none;">
+                        @csrf
+                    </form>
+                </li>
                 @endauth
 
                 <li class="nav-item">
@@ -89,6 +97,8 @@
 
                         <i class="fa fa-shopping-cart fa-2x"></i></a>
                 </li>
+
+                
                 
             </ul>
         </div>
@@ -100,11 +110,6 @@
     @include('flash::message')
     @yield('content')
 </div>
-
-<script
-src="https://code.jquery.com/jquery-2.2.4.min.js"
-integrity="sha256-BbhdlvQf/xTY9gja0Dq3HiwQF8LaCRTXxZKRutelT44="
-crossorigin="anonymous"></script>
 
 <script src="{{asset('js/app.js')}}"></script>
 

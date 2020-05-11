@@ -72,9 +72,20 @@ class RegisterController extends Controller
             'name' => $data['name'],
             'email' => $data['email'],
             'password' => Hash::make($data['password']),
+            'role' => 'ROLE_USER'
         ]);
     }
     protected function registered(Request $request, $user){
+
+        if ($user->role == 'ROLE_OWNER'){
+            return redirect()->route('admin.stores.index');
+        }
+
+        if ($user->role == 'ROLE_USER'){
+            return redirect()->route('checkout.index');
+        } else {
+            return redirect()->route('home');
+        }
 
         Mail::to($user->email)->send(new UserRegisteredEmail($user));
 

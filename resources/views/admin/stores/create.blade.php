@@ -29,7 +29,7 @@
 
     <div class="form-group">
         <label>Celular:</label>
-            <input type="text" name="phone" class="form-control @error('phone') is-invalid @enderror" value="{{old('phone')}}">
+            <input type="text" name="phone" id="phone" class="form-control @error('phone') is-invalid @enderror" value="{{old('phone')}}">
             @error('phone')
                 <div class="invalid-feedback">
                     {{$message}}
@@ -55,4 +55,11 @@
 
 </form>
 
+@endsection
+
+@section('scripts')
+    <script>
+        let imPhone =  new Inputmask('(99) 99999-9999');
+        imPhone.mask(document.getElementById('phone'));
+    </script>
 @endsection
