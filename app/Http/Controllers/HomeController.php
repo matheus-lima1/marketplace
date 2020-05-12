@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Product;
+//use Ramsey\Uuid\Uuid;
 
 
 class HomeController extends Controller
@@ -17,7 +18,9 @@ class HomeController extends Controller
 
     public function index()
     {
-        var_dump(session()->get('pagseguro_session_code'));
+       // $var = strval(Uuid::uuid4());
+        //var_dump($var);
+       // var_dump(session()->get('pagseguro_session_code'));
         //session()->forget('pagseguro_session_code');
 
         $products = $this->product->limit(6)->get();

@@ -69,6 +69,8 @@ Route::prefix('checkout')->name('checkout.')->group(function(){
     Route::get('/','CheckoutController@index')->name('index');
     Route::post('proccess','CheckoutController@proccess')->name('proccess');
     Route::get('thanks', 'CheckoutController@thanks')->name('thanks');
+
+    Route::post('notification', 'CheckoutController@notification')->name('notification');
 });
 
 
