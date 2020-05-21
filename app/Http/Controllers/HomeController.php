@@ -23,7 +23,8 @@ class HomeController extends Controller
        // var_dump(session()->get('pagseguro_session_code'));
         //session()->forget('pagseguro_session_code');
 
-        $products = $this->product->limit(6)->get();
+        //$products = $this->product->limit(6)->get();
+        $products = $this->product->paginate(12);
 
         $stores = \App\Store::limit(3)->get();
 

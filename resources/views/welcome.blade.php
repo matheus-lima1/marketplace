@@ -12,8 +12,8 @@
                     <img src="{{asset('assets/img/no-photo.jpg')}}" alt="" class="card-img-top">
                 @endif
                 <div class="card-body">
-                    <h2 class="card-title">{{$p->name}}</h2>
-                    <p class="card-text">{{$p->description}}</p>
+                    <h4 class="card-title">{{$p->name}}</h4>
+                    <p class="card-text text-truncate">{{$p->description}}</p>
                     <H3>
                         R$ {{number_format($p->price,'2',',','.')}}
                     </H3>
@@ -22,11 +22,17 @@
                     </a>
                 </div>
             </div>
+            
         </div>
+        
 
         @if(($key + 1)%3 == 0) </div><div class="row front"> @endif
 
          @endforeach
+         <div class="container" style="margin-top: 10px;">
+            {{$products->links()}}
+         </div>
+         
     </div>
 
     <div class="row">
@@ -42,8 +48,8 @@
                 <img src="https://via.placeholder.com/600X300.png?text=logo" alt="Loja sem logo..." class="img-fluid">
             @endif
             <h3>{{$store->name}}</h3>
-            <p>{{$store->description}}</p>
-        <a href="{{route('store.single', ['slug' => $store->slug])}}" class="btn btn-sm btn-success">Ver Loja</a>
+            <p class="text-truncate">{{$store->description}}</p>
+        <a href="{{route('store.single', ['slug' => $store->slug])}}" class="btn btn-success" style="margin-bottom: 40px;">Ver Loja</a>
         </div>
         @endforeach
     </div>
